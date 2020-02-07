@@ -1,3 +1,2 @@
 # cryptopals
-My attempt at the Cryptopals Challenges, in Go ~
-Cryptopals Challenges - https://cryptopals.com/
+My attempt at the Cryptopals Challenges, in Go ~ https://cryptopals.com/
