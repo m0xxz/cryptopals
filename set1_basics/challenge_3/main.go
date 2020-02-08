@@ -31,14 +31,18 @@ func Chal(input string) string {
 			}
 		}
 
+		// I know there is only 1 result that will match this condition
+		// Yeah, it could be better, but for now this is fine.
 		if eai_count > 10 {
 			fmt.Println("XOR'd with: \"" + string(i) + "\"" + " (" + strconv.Itoa(i) + "):")
-			fmt.Println("\t" + string(output) + "\n")
-			fmt.Println("\t e: " + strconv.Itoa(eai_count))
+			fmt.Println("\t" + string(output))
+			fmt.Println("\t{eai Count: " + strconv.Itoa(eai_count) + "}\n")
+
+			return string(output)
 		}
 	}
 
-	return "result"
+	return "[!] No result found!"
 }
 
 func main() {
