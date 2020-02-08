@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-// Convert hex to base64, pretty simple.
+// Fixed XOR.
 func Chal(input string) string {
 	// We will XOR our input against this, after hex decoding
 	b, _ := hex.DecodeString("686974207468652062756c6c277320657965")

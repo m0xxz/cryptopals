@@ -3,43 +3,66 @@ package main
 import (
 	"encoding/hex"
 	"strconv"
+	"sort"
 	"fmt"
 )
 
-// Convert hex to base64, pretty simple.
+// Single-byte XOR cipher.
 func Chal(input string) string {
 	// Per rules, convert to bytes
 	bytes, _ := hex.DecodeString(input)
 
-	// ASCII 0-127
+	// Map of strings, indexed by the ASCII XOR value
+	outputs := make(map[int]string)
+
+	// Keep track of the highest E, A, I, Space count for our Character Freq Analysis
+	eai_freqs := make(map[int]int) 
+
+	// ASCII 0-127 -- XOR against each ASCII value
 	for i := 0; i < 128; i++ {
-		var output []byte
+		var result[]byte
 		for x := 0; x < len(bytes); x++ {
-			output = append(output, bytes[x] ^ byte(i))
+			result = append(result, bytes[x] ^ byte(i))
 		}
+
+		// Store result in map as a string
+		outputs[i] = string(result)
 
 		// Char freq analysis - e, a, i and space are most common in English sentences
 		// Ref: https://www.rosettacode.org/wiki/Letter_frequency#Go
-		eai_count := 0
-		for x := 0; x < len(output); x++ {
-			//fmt.Println(string(output[x]))
-			if string(output[x]) == "e" || string(output[x]) == "E" ||
-			string(output[x]) == "a" || string(output[x]) == "A" ||
-			string(output[x]) == "i" || string(output[x]) == "I" ||
-			string(output[x]) == " " {
-				eai_count++
+		eai := 0
+		for x := 0; x < len(result); x++ {
+			if(string(result[x]) == "e" || string(result[x]) == "E" ||
+			string(result[x]) == "a" || string(result[x]) == "A" ||
+			string(result[x]) == "i" || string(result[x]) == "I" ||
+			string(result[x]) == " ") {
+				eai++
 			}
 		}
 
-		// I know there is only 1 result that will match this condition
-		// Yeah, it could be better, but for now this is fine.
-		if eai_count > 10 {
-			fmt.Println("XOR'd with: \"" + string(i) + "\"" + " (" + strconv.Itoa(i) + "):")
-			fmt.Println("\t" + string(output))
-			fmt.Println("\t{eai Count: " + strconv.Itoa(eai_count) + "}\n")
+		// Store eai count
+		eai_freqs[i] = eai
+	}
 
-			return string(output)
+	// Sort the map by the eai count, we we can find the max eai
+	sorted_eai_freqs := map[int]int{}
+	eai_keys := []int{}
+	for key, val := range eai_freqs {
+		sorted_eai_freqs[val] = key
+		eai_keys = append(eai_keys, val)
+	}
+	sort.Ints(eai_keys)
+
+	// Iterate through our sorted map and locate our max eai
+	i := 0
+	for _, val := range eai_keys {
+		if(i == len(eai_keys) - 1) {
+			fmt.Println("XOR'd with: \"" + string(sorted_eai_freqs[val]) + "\"" + " (" + strconv.Itoa(sorted_eai_freqs[val]) + "):")
+			fmt.Println("\t" + outputs[sorted_eai_freqs[val]])
+			fmt.Println("\t{eai Count: " + strconv.Itoa(val) + "}\n")
+			return outputs[sorted_eai_freqs[val]]
 		}
+		i++
 	}
 
 	return "[!] No result found!"
