@@ -15,6 +15,10 @@ echo "Challenge 3:"
 go test cryptopals/set1_basics/challenge_3
 echo .
 
+echo "Challenge 4:"
+go test cryptopals/set1_basics/challenge_4
+echo .
+
 # More here once I complete those challenges
 
 echo "Done!"
