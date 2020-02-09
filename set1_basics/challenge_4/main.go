@@ -33,6 +33,7 @@ func readData() []string {
 }
 
 // Preforms single character XOR on each data point, for all 0-127 ASCII
+// Returns xorMap[index][XOR'd char as int]
 func xorAnalysis(data []string) map[int]map[int][]byte {
 	xorMap := make(map[int]map[int][]byte, 0)
 
@@ -54,6 +55,34 @@ func xorAnalysis(data []string) map[int]map[int][]byte {
 	return xorMap
 }
 
+// Preforms Character Frequency Analysis
+// Returns eaiMap[index][eai_count]
+func eaiAnalysis(xorMap map[int]map[int][]byte) map[int]map[int][]byte {
+	eaiMap := make(map[int]map[int][]byte, 0)
+
+	for i := range xorMap {
+		eaiMap[i] = make(map[int][]byte)
+
+		for ch := range xorMap[i] {
+			// Char freq analysis - e, a, i and space are most common in English sentences
+			// Ref: https://www.rosettacode.org/wiki/Letter_frequency#Go
+			eai := 0
+			for x := 0; x < len(xorMap[i][ch]); x++ {
+				if string(xorMap[i][ch][x]) == "e" || string(xorMap[i][ch][x]) == "E" ||
+					string(xorMap[i][ch][x]) == "a" || string(xorMap[i][ch][x]) == "A" ||
+					string(xorMap[i][ch][x]) == "i" || string(xorMap[i][ch][x]) == "I" ||
+					string(xorMap[i][ch][x]) == " " {
+					eai++
+				}
+			}
+
+			eaiMap[i][eai] = xorMap[i][ch]
+		}
+	}
+
+	return eaiMap
+}
+
 // Detect single-character XOR.
 func chal() string {
 	// Read input file
@@ -66,14 +95,32 @@ func chal() string {
 	// XOR Analysis
 	xorMap := xorAnalysis(data)
 
-	for i := range xorMap {
+	/*for i := range xorMap {
 		fmt.Println(data[i], "XOR Analysis:")
 		for k := range xorMap[i] {
 			fmt.Println("\t XOR'd with ", string(k), "\n\t", string(xorMap[i][k]))
 		}
-	}
+	}*/
 
 	// EAI Character Frequency Analysis
+	eaiMap := eaiAnalysis(xorMap)
+
+	// Find the max EAI value
+	maxI, maxK := 0, 0
+	for i := range eaiMap {
+		for k := range eaiMap[i] {
+			//fmt.Println(k)
+			//fmt.Println("i=", i, "k=", k, "txt ", string(eaiMap[i][k]))
+			//fmt.Println(string(eaiMap[i][10]))
+
+			if k > maxK {
+				maxK = k
+				maxI = i
+			}
+		}
+	}
+
+	fmt.Println(string(eaiMap[maxI][maxK]))
 
 	return ""
 }
