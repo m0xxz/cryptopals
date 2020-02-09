@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	//"encoding/hex"
+	"encoding/hex"
 	"fmt"
 	"log"
 	"os"
@@ -33,8 +33,25 @@ func readData() []string {
 }
 
 // Preforms single character XOR on each data point, for all 0-127 ASCII
-func xorAnalysis() map[int]byte {
+func xorAnalysis(data []string) map[int]map[int][]byte {
+	xorMap := make(map[int]map[int][]byte, 0)
 
+	for i := range data {
+		xorMap[i] = make(map[int][]byte)
+
+		// Per rules, convert to bytes
+		bytes, _ := hex.DecodeString(data[i])
+
+		// ASCII 0-127 -- XOR against each ASCII value
+		for ch := 0; ch < 128; ch++ {
+			xorMap[i][ch] = make([]byte, 0)
+			for x := 0; x < len(bytes); x++ {
+				xorMap[i][ch] = append(xorMap[i][ch], bytes[x]^byte(ch))
+			}
+		}
+	}
+
+	return xorMap
 }
 
 // Detect single-character XOR.
@@ -42,11 +59,21 @@ func Chal() string {
 	// Read input file
 	data := readData()
 
-	/* for i := range data {
+	/*for i := range data {
 		fmt.Println(data[i])
-	} */
+	}*/
 
 	// XOR Analysis
+	xorMap := xorAnalysis(data)
+
+	/*for i := range xorMap {
+		fmt.Println(data[i], "XOR Analysis:")
+		for k := range xorMap[i] {
+			fmt.Println("\t XOR'd with ", string(k), "\n\t", string(xorMap[i][k]))
+		}
+	}*/
+
+	// EAI Character Frequency Analysis
 
 	return ""
 }
