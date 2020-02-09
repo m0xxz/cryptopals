@@ -2,13 +2,13 @@ package main
 
 import (
 	"encoding/hex"
-	"strconv"
-	"sort"
 	"fmt"
+	"sort"
+	"strconv"
 )
 
 // Single-byte XOR cipher.
-func Chal(input string) string {
+func chal(input string) string {
 	// Per rules, convert to bytes
 	bytes, _ := hex.DecodeString(input)
 
@@ -16,13 +16,13 @@ func Chal(input string) string {
 	outputs := make(map[int]string)
 
 	// Keep track of the highest E, A, I, Space count for our Character Freq Analysis
-	eai_freqs := make(map[int]int) 
+	eaiFreqs := make(map[int]int)
 
 	// ASCII 0-127 -- XOR against each ASCII value
 	for i := 0; i < 128; i++ {
-		var result[]byte
+		var result []byte
 		for x := 0; x < len(bytes); x++ {
-			result = append(result, bytes[x] ^ byte(i))
+			result = append(result, bytes[x]^byte(i))
 		}
 
 		// Store result in map as a string
@@ -32,35 +32,35 @@ func Chal(input string) string {
 		// Ref: https://www.rosettacode.org/wiki/Letter_frequency#Go
 		eai := 0
 		for x := 0; x < len(result); x++ {
-			if(string(result[x]) == "e" || string(result[x]) == "E" ||
-			string(result[x]) == "a" || string(result[x]) == "A" ||
-			string(result[x]) == "i" || string(result[x]) == "I" ||
-			string(result[x]) == " ") {
+			if string(result[x]) == "e" || string(result[x]) == "E" ||
+				string(result[x]) == "a" || string(result[x]) == "A" ||
+				string(result[x]) == "i" || string(result[x]) == "I" ||
+				string(result[x]) == " " {
 				eai++
 			}
 		}
 
 		// Store eai count
-		eai_freqs[i] = eai
+		eaiFreqs[i] = eai
 	}
 
 	// Sort the map by the eai count, we we can find the max eai
-	sorted_eai_freqs := map[int]int{}
-	eai_keys := []int{}
-	for key, val := range eai_freqs {
-		sorted_eai_freqs[val] = key
-		eai_keys = append(eai_keys, val)
+	sortedEaiFreqs := map[int]int{}
+	eaiKeys := []int{}
+	for key, val := range eaiFreqs {
+		sortedEaiFreqs[val] = key
+		eaiKeys = append(eaiKeys, val)
 	}
-	sort.Ints(eai_keys)
+	sort.Ints(eaiKeys)
 
 	// Iterate through our sorted map and locate our max eai
 	i := 0
-	for _, val := range eai_keys {
-		if(i == len(eai_keys) - 1) {
-			fmt.Println("XOR'd with: \"" + string(sorted_eai_freqs[val]) + "\"" + " (" + strconv.Itoa(sorted_eai_freqs[val]) + "):")
-			fmt.Println("\t" + outputs[sorted_eai_freqs[val]])
+	for _, val := range eaiKeys {
+		if i == len(eaiKeys)-1 {
+			fmt.Println("XOR'd with: \"" + string(sortedEaiFreqs[val]) + "\"" + " (" + strconv.Itoa(sortedEaiFreqs[val]) + "):")
+			fmt.Println("\t" + outputs[sortedEaiFreqs[val]])
 			fmt.Println("\t{eai Count: " + strconv.Itoa(val) + "}\n")
-			return outputs[sorted_eai_freqs[val]]
+			return outputs[sortedEaiFreqs[val]]
 		}
 		i++
 	}
@@ -70,5 +70,5 @@ func Chal(input string) string {
 
 func main() {
 	input := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-	fmt.Println(Chal(input))
+	fmt.Println(chal(input))
 }

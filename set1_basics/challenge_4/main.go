@@ -55,7 +55,7 @@ func xorAnalysis(data []string) map[int]map[int][]byte {
 }
 
 // Detect single-character XOR.
-func Chal() string {
+func chal() string {
 	// Read input file
 	data := readData()
 
@@ -66,12 +66,12 @@ func Chal() string {
 	// XOR Analysis
 	xorMap := xorAnalysis(data)
 
-	/*for i := range xorMap {
+	for i := range xorMap {
 		fmt.Println(data[i], "XOR Analysis:")
 		for k := range xorMap[i] {
 			fmt.Println("\t XOR'd with ", string(k), "\n\t", string(xorMap[i][k]))
 		}
-	}*/
+	}
 
 	// EAI Character Frequency Analysis
 
@@ -79,5 +79,5 @@ func Chal() string {
 }
 
 func main() {
-	fmt.Println(Chal())
+	fmt.Println(chal())
 }
