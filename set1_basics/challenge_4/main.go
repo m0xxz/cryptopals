@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	//"sort"
 	//"strconv"
 )
@@ -14,9 +15,13 @@ import (
 func readData() []string {
 	data := make([]string, 0)
 
+	// Look for our file in two locations
 	file, err := os.Open("set1_basics/challenge_4/4.txt")
 	if err != nil {
-		log.Fatal(err)
+		file, err = os.Open("4.txt")
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	defer file.Close()
 
@@ -109,10 +114,6 @@ func chal() string {
 	maxI, maxK := 0, 0
 	for i := range eaiMap {
 		for k := range eaiMap[i] {
-			//fmt.Println(k)
-			//fmt.Println("i=", i, "k=", k, "txt ", string(eaiMap[i][k]))
-			//fmt.Println(string(eaiMap[i][10]))
-
 			if k > maxK {
 				maxK = k
 				maxI = i
@@ -120,9 +121,8 @@ func chal() string {
 		}
 	}
 
-	fmt.Println(string(eaiMap[maxI][maxK]))
-
-	return ""
+	// Return our result, stripping new lines
+	return strings.TrimSuffix(string(eaiMap[maxI][maxK]), "\n")
 }
 
 func main() {
