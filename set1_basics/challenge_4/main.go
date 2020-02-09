@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
-	//"sort"
-	//"strconv"
 )
 
 // Reads data from the 4.txt file provided
@@ -61,14 +60,16 @@ func xorAnalysis(data []string) map[int]map[int][]byte {
 }
 
 // Preforms Character Frequency Analysis
-// Returns eaiMap[index][eai_count]
-func eaiAnalysis(xorMap map[int]map[int][]byte) map[int]map[int][]byte {
-	eaiMap := make(map[int]map[int][]byte, 0)
+// Returns eaiMap[index][XOR'd char as int][eai_count]
+func eaiAnalysis(xorMap map[int]map[int][]byte) map[int]map[int]map[int][]byte {
+	eaiMap := make(map[int]map[int]map[int][]byte, 0)
 
 	for i := range xorMap {
-		eaiMap[i] = make(map[int][]byte)
+		eaiMap[i] = make(map[int]map[int][]byte)
 
 		for ch := range xorMap[i] {
+			eaiMap[i][ch] = make(map[int][]byte)
+
 			// Char freq analysis - e, a, i and space are most common in English sentences
 			// Ref: https://www.rosettacode.org/wiki/Letter_frequency#Go
 			eai := 0
@@ -81,7 +82,7 @@ func eaiAnalysis(xorMap map[int]map[int][]byte) map[int]map[int][]byte {
 				}
 			}
 
-			eaiMap[i][eai] = xorMap[i][ch]
+			eaiMap[i][ch][eai] = xorMap[i][ch]
 		}
 	}
 
@@ -93,38 +94,35 @@ func chal() string {
 	// Read input file
 	data := readData()
 
-	/*for i := range data {
-		fmt.Println(data[i])
-	}*/
-
 	// XOR Analysis
 	xorMap := xorAnalysis(data)
-
-	/*for i := range xorMap {
-		fmt.Println(data[i], "XOR Analysis:")
-		for k := range xorMap[i] {
-			fmt.Println("\t XOR'd with ", string(k), "\n\t", string(xorMap[i][k]))
-		}
-	}*/
 
 	// EAI Character Frequency Analysis
 	eaiMap := eaiAnalysis(xorMap)
 
 	// Find the max EAI value
-	maxI, maxK := 0, 0
+	maxI, maxK, maxJ := 0, 0, 0
 	for i := range eaiMap {
 		for k := range eaiMap[i] {
-			if k > maxK {
-				maxK = k
-				maxI = i
+			for j := range eaiMap[i][k] {
+				if j > maxJ {
+					maxJ = j
+					maxK = k
+					maxI = i
+				}
 			}
 		}
 	}
 
+	// Output our findings
+	fmt.Println("[*] ", data[maxI])
+	fmt.Println("\t XOR'd w/ '" + string(maxK) + "' (ASCII " + strconv.Itoa(maxK) + ")")
+	fmt.Println("\t " + strings.TrimSuffix(string(xorMap[maxI][maxK]), "\n"))
+
 	// Return our result, stripping new lines
-	return strings.TrimSuffix(string(eaiMap[maxI][maxK]), "\n")
+	return strings.TrimSuffix(string(xorMap[maxI][maxK]), "\n")
 }
 
 func main() {
-	fmt.Println(chal())
+	chal()
 }
