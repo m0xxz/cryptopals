@@ -12,6 +12,6 @@ If you've written any crypto code in the past, you're going to feel like skippin
 3. Single-byte XOR cipher - Finished
 4. Detect single-character XOR - Finished
 5. Implement repeating-key XOR - Finished
-6. Break repeating-key XOR - Not yet started
+6. Break repeating-key XOR - WIP
 7. AES in ECB mode - Not yet started
 8. Detect AES in ECB mode - Not yet started
