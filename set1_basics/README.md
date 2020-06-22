@@ -7,11 +7,11 @@ This set is relatively easy. With one exception, most of these exercises should 
 
 If you've written any crypto code in the past, you're going to feel like skipping a lot of this. Don't skip them. At least two of them (we won't say which) are important stepping stones to later attacks.
 
-1. Convert hex to base64 - WIP
-2. Fixed XOR - Not yet started
-3. Single-byte XOR cipher - Not yet started
-4. Detect single-character XOR - Not yet started
-5. Implement repeating-key XOR - Not yet started
+1. Convert hex to base64 - Finished
+2. Fixed XOR - Finished
+3. Single-byte XOR cipher - Finished
+4. Detect single-character XOR - Finished
+5. Implement repeating-key XOR - Finished
 6. Break repeating-key XOR - Not yet started
 7. AES in ECB mode - Not yet started
 8. Detect AES in ECB mode - Not yet started
