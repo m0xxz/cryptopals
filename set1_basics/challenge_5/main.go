@@ -8,8 +8,8 @@ import (
 // Repeating-key XOR
 func chal() string {
 	// Opening stanza and our repeating key
-	line := []byte(string("Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"))
-	key := []byte(string("ICE"))
+	line := []byte("Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal")
+	key := []byte("ICE")
 
 	i := 0
 	var encryptedLine []byte
